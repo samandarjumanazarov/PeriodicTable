@@ -12,11 +12,10 @@ fi
 # Function to get element details
 GET_ELEMENT_INFO() {
   # Check if input is an integer (atomic number)
-  if [[ $1 =~ ^[0-9]+$ ]]; then
-    # Query for atomic number
+   if [[ $1 =~ ^[0-9]+$ ]]; then
     local QUERY_RESULT=$($PSQL "SELECT atomic_number, symbol, name, types.type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM elements INNER JOIN properties USING(atomic_number) INNER JOIN types ON properties.type_id = types.type_id WHERE atomic_number = $1;")
   else
-    # Query for symbol or name
+    # If input is a symbol or name, perform the query using those fields
     local QUERY_RESULT=$($PSQL "SELECT atomic_number, symbol, name, types.type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM elements INNER JOIN properties USING(atomic_number) INNER JOIN types ON properties.type_id = types.type_id WHERE symbol = '$1' OR name = '$1';")
   fi
 
