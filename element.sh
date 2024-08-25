@@ -1,9 +1,5 @@
-# #!/bin/bash
-PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
-$PSQL "DELETE FROM properties WHERE atomic_number = 1000;"
-$PSQL "DELETE FROM elements WHERE atomic_number = 1000;"
+#!/bin/bash
 
-echo "Deleted element with atomic_number 1000 from the database."
 PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
 
 # Check if an argument is provided
@@ -17,8 +13,10 @@ fi
 GET_ELEMENT_INFO() {
   # Check if input is an integer (atomic number)
   if [[ $1 =~ ^[0-9]+$ ]]; then
+    # Query for atomic number
     local QUERY_RESULT=$($PSQL "SELECT atomic_number, symbol, name, types.type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM elements INNER JOIN properties USING(atomic_number) INNER JOIN types ON properties.type_id = types.type_id WHERE atomic_number = $1;")
   else
+    # Query for symbol or name
     local QUERY_RESULT=$($PSQL "SELECT atomic_number, symbol, name, types.type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM elements INNER JOIN properties USING(atomic_number) INNER JOIN types ON properties.type_id = types.type_id WHERE symbol = '$1' OR name = '$1';")
   fi
 
